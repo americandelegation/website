@@ -113,7 +113,7 @@ document.querySelectorAll('.listen').forEach(l=>{const b=l.querySelector('button
     const chips=[...r.querySelectorAll('.chips li')];
     chips.forEach((li,i)=>setTimeout(()=>{li.classList.add('on');li.querySelector('b').textContent=sym[li.dataset.r]},delay+i*260));
     setTimeout(()=>{r.querySelector('.vscore span').textContent=r.dataset.score;const st=r.querySelector('.stamp'),v=r.dataset.verdict;
-      st.textContent=v;st.className='stamp'+(v==='Debated'?' debated':v==='Not a Classic'?' not':'');r.classList.add('shown')},delay+chips.length*260+250)}
+      st.textContent=v;st.className='stamp'+(v==='Honorary Classic'?' honorary':v==='Debated'?' debated':v==='Not a Classic'?' not':'');r.classList.add('shown')},delay+chips.length*260+250)}
   rows.forEach(r=>r.querySelector('.slot .btn').addEventListener('click',()=>reveal(r,0)));
   const all=document.getElementById('revealall');all&&all.addEventListener('click',()=>rows.forEach((r,i)=>reveal(r,i*700)));
 })();

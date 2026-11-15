@@ -12,7 +12,8 @@ Two ways to time a release:
 
        <!--live 2026-11-19T06:00-05:00-->shown from that moment<!--before-->shown until then<!--/live-->
 
-   The <!--before--> part is optional.
+   The <!--before--> part is optional. Blocks can nest: put the whole earlier
+   block inside the <!--before--> part of the next one.
 
 Builds run 20 minutes ahead of the clock (LEAD_MINUTES), so a release
 goes up shortly before its time rather than after it.
@@ -31,7 +32,9 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 SRC, OUT = os.path.join(ROOT, 'site'), os.path.join(ROOT, 'dist')
 TEXT = ('.html', '.xml', '.txt', '.webmanifest')
 LEAD_MINUTES = 20
-BLOCK = re.compile(r'<!--live ([0-9T:+\-Z]+)-->(.*?)(?:<!--before-->(.*?))?<!--/live-->', re.S)
+NOLIVE = r'(?:(?!<!--live ).)*?'
+BLOCK = re.compile(r'<!--live ([0-9T:+\-Z]+)-->(' + NOLIVE + r')(?:<!--before-->(' + NOLIVE + r'))?<!--/live-->', re.S)
+TIMES = re.compile(r'<!--live ([0-9T:+\-Z]+)-->')
 
 
 def when(s):
@@ -57,7 +60,7 @@ def all_times():
     for dp, _, fs in os.walk(SRC):
         for f in fs:
             if f.endswith(TEXT):
-                times += [when(m.group(1)) for m in BLOCK.finditer(open(os.path.join(dp, f), encoding='utf-8').read())]
+                times += [when(m.group(1)) for m in TIMES.finditer(open(os.path.join(dp, f), encoding='utf-8').read())]
     return sorted(set(times))
 
 
@@ -79,7 +82,8 @@ def build(now):
             src, dst = os.path.join(dp, f), os.path.join(OUT, rel, f)
             if f.endswith(TEXT):
                 s = open(src, encoding='utf-8').read()
-                s = BLOCK.sub(lambda m: m.group(2) if when(m.group(1)) <= now else (m.group(3) or ''), s)
+                while BLOCK.search(s):  # innermost blocks first, so blocks can nest
+                    s = BLOCK.sub(lambda m: m.group(2) if when(m.group(1)) <= now else (m.group(3) or ''), s)
                 open(dst, 'w', encoding='utf-8').write(s)
             else:
                 shutil.copy2(src, dst)
