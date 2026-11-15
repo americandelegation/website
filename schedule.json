@@ -1,0 +1,7 @@
+{
+  "_how": "Each path in site/ stays off the live site until its time. Times are Eastern with an offset: -05:00 until March 14, 2027, then -04:00.",
+  "episodes/spirit-in-the-sky": "2026-11-16T06:00-05:00",
+  "img/spirit-in-the-sky.jpg": "2026-11-16T06:00-05:00",
+  "img/spirit-in-the-sky-tall.jpg": "2026-11-16T06:00-05:00",
+  "assets/og/og-episode-spirit-in-the-sky.jpg": "2026-11-16T06:00-05:00"
+}

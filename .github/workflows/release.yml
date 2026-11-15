@@ -1,0 +1,25 @@
+name: Release scheduled pages
+
+# Every hour, check whether anything in the release schedule just went live.
+# If it did, ask Netlify to rebuild so the new pages appear.
+on:
+  schedule:
+    - cron: "7 * * * *"
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for releases in the last two hours
+        id: due
+        run: |
+          if python3 build.py --due 7200; then echo "due=yes" >> "$GITHUB_OUTPUT"; fi
+      - name: Rebuild the site on Netlify
+        if: steps.due.outputs.due == 'yes' || github.event_name == 'workflow_dispatch'
+        env:
+          HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "NETLIFY_BUILD_HOOK secret is not set"; exit 1; fi
+          curl -fsS -X POST -d '{}' "$HOOK" > /dev/null && echo "Rebuild requested"
