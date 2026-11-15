@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /guest-release/
+
+Sitemap: https://americandelegation.com/sitemap.xml

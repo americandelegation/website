@@ -1,0 +1,20 @@
+{
+  "name": "The American Delegation",
+  "short_name": "Delegation",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0F36",
+  "theme_color": "#192376",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
