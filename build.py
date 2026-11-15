@@ -14,10 +14,14 @@ Two ways to time a release:
 
    The <!--before--> part is optional.
 
+Builds run 20 minutes ahead of the clock (LEAD_MINUTES), so a release
+goes up shortly before its time rather than after it.
+
 Usage:
-    python3 build.py                      build for right now
+    python3 build.py                      build for right now, plus the lead
     python3 build.py --at 2026-11-19T12:00Z   preview the site at another moment
-    python3 build.py --due 7200           exit 0 if anything went live in the last 7200 seconds
+    python3 build.py --due 3600 --ahead 1800
+                                          exit 0 if a release falls between an hour ago and 30 minutes from now
     python3 build.py --upcoming           list scheduled releases
 """
 import json, os, re, shutil, sys
@@ -26,6 +30,7 @@ from datetime import datetime, timezone, timedelta
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SRC, OUT = os.path.join(ROOT, 'site'), os.path.join(ROOT, 'dist')
 TEXT = ('.html', '.xml', '.txt', '.webmanifest')
+LEAD_MINUTES = 20
 BLOCK = re.compile(r'<!--live ([0-9T:+\-Z]+)-->(.*?)(?:<!--before-->(.*?))?<!--/live-->', re.S)
 
 
@@ -89,12 +94,15 @@ if __name__ == '__main__':
     now = datetime.now(timezone.utc)
     if '--at' in a:
         now = when(a[a.index('--at') + 1])
+    elif '--due' not in a:
+        now += timedelta(minutes=LEAD_MINUTES)
     if '--upcoming' in a:
         for t in all_times():
             print(t.isoformat(timespec='minutes'), '(live)' if t <= now else '')
     elif '--due' in a:
-        window = timedelta(seconds=int(a[a.index('--due') + 1]))
-        due = [t for t in all_times() if now - window < t <= now]
+        back = timedelta(seconds=int(a[a.index('--due') + 1]))
+        ahead = timedelta(seconds=int(a[a.index('--ahead') + 1])) if '--ahead' in a else timedelta(0)
+        due = [t for t in all_times() if now - back < t <= now + ahead]
         print('Due:', ', '.join(t.isoformat(timespec='minutes') for t in due) or 'nothing')
         sys.exit(0 if due else 1)
     else:

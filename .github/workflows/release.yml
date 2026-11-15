@@ -1,10 +1,11 @@
 name: Release scheduled pages
 
-# Every hour, check whether anything in the release schedule just went live.
-# If it did, ask Netlify to rebuild so the new pages appear.
+# At 45 minutes past every hour, check whether a release is coming up in the
+# next 30 minutes (or was missed in the last hour). If so, ask Netlify to
+# rebuild. Builds run 20 minutes ahead, so a 6:00 release goes up around 5:46.
 on:
   schedule:
-    - cron: "7 * * * *"
+    - cron: "45 * * * *"
   workflow_dispatch:
 
 jobs:
@@ -12,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Check for releases in the last two hours
+      - name: Check for releases due soon
         id: due
         run: |
-          if python3 build.py --due 7200; then echo "due=yes" >> "$GITHUB_OUTPUT"; fi
+          if python3 build.py --due 3600 --ahead 1800; then echo "due=yes" >> "$GITHUB_OUTPUT"; fi
       - name: Rebuild the site on Netlify
         if: steps.due.outputs.due == 'yes' || github.event_name == 'workflow_dispatch'
         env:
