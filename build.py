@@ -89,6 +89,9 @@ def build(now):
                 shutil.copy2(src, dst)
             n += 1
     upcoming = [t for t in all_times() if t > now]
+    fn = os.path.join(ROOT, 'netlify', 'functions', 'release-times.mjs')
+    os.makedirs(os.path.dirname(fn), exist_ok=True)
+    open(fn, 'w').write('export default ' + json.dumps([t.isoformat() for t in all_times()]) + ';\n')
     print(f'Built {n} files for {now.isoformat(timespec="minutes")}. Held back: {", ".join(sorted(hidden)) or "nothing"}.')
     print(f'Next release: {upcoming[0].isoformat(timespec="minutes") if upcoming else "none scheduled"}')
 
