@@ -687,3 +687,11 @@ form.form.sent{background:none;box-shadow:none;padding:0;align-items:center}
 .chips li.bonus{background:rgba(198,151,49,.14)}
 .stamp.honorary{color:var(--gold);border-color:var(--gold);white-space:normal;width:150px}
 @media (max-width:620px){.vtile{align-self:start}}
+/* Verdict stamp drawn like the episode-art stamps */
+.vrow .stamp{border:0;padding:0;background:none;width:200px;rotate:-7deg;line-height:0;white-space:normal}
+.vrow .stamp svg{display:block;width:100%;height:auto}
+.vrow .stamp.honorary{color:var(--gold)}
+.vrow .stamp.not{color:var(--soft);width:200px}
+.vend .slot{width:210px}
+@media (max-width:620px){.vrow .stamp{width:170px}}
+.vscore small{white-space:nowrap}

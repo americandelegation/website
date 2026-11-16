@@ -113,7 +113,15 @@ document.querySelectorAll('.listen').forEach(l=>{const b=l.querySelector('button
     const chips=[...r.querySelectorAll('.chips li')];
     chips.forEach((li,i)=>setTimeout(()=>{li.classList.add('on');li.querySelector('b').textContent=sym[li.dataset.r]},delay+i*260));
     setTimeout(()=>{r.querySelector('.vscore span').textContent=r.dataset.score;const st=r.querySelector('.stamp'),v=r.dataset.verdict;
-      st.textContent=v;st.className='stamp'+(v==='Honorary Classic'?' honorary':v==='Debated'?' debated':v==='Not a Classic'?' not':'');r.classList.add('shown')},delay+chips.length*260+250)}
+      st.innerHTML=stampSVG(v,r.dataset.place||'');st.setAttribute('aria-label',v);
+      st.className='stamp'+(v==='Honorary Classic'?' honorary':v==='Not a Classic'?' not':'');r.classList.add('shown')},delay+chips.length*260+250)}
+  // the same stamp as the episode art: double border, a label, the big word and the place
+  function stampSVG(v,place){const top=v==='Honorary Classic'?'HONORARY':v==='Not a Classic'?'NOT A':'OFFICIAL POSITION';
+    return '<svg viewBox="0 0 240 110" aria-hidden="true"><defs><filter id="ink" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1.4 1.7"/><feComposite in="SourceGraphic" operator="in"/></filter></defs>'+
+      '<g filter="url(#ink)" fill="currentColor" stroke="currentColor"><rect x="3" y="3" width="234" height="104" rx="7" fill="none" stroke-width="5.3"/><rect x="11" y="11" width="218" height="88" rx="4.5" fill="none" stroke-width="1.7"/>'+
+      '<text x="120" y="33" text-anchor="middle" stroke="none" font-family="AD Sans,Arial,sans-serif" font-weight="800" font-size="11.5" letter-spacing="'+(top.length>8?3.2:6)+'">'+top+'</text>'+
+      '<text x="120" y="72" text-anchor="middle" stroke="none" font-family="AD Title,Arial,sans-serif" font-weight="800" font-size="40" letter-spacing="1">CLASSIC</text>'+
+      '<text x="120" y="92" text-anchor="middle" stroke="none" font-family="AD Sans,Arial,sans-serif" font-weight="800" font-size="12.5" letter-spacing="2.8">'+place.toUpperCase()+'</text></g></svg>'}
   rows.forEach(r=>r.querySelector('.slot .btn').addEventListener('click',()=>reveal(r,0)));
   const all=document.getElementById('revealall');all&&all.addEventListener('click',()=>rows.forEach((r,i)=>reveal(r,i*700)));
 })();
