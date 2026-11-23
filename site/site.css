@@ -696,3 +696,4 @@ form.form.sent{background:none;box-shadow:none;padding:0;align-items:center}
 @media (max-width:620px){.vrow .stamp{width:170px}}
 .vscore small{white-space:nowrap}
 .eps.four{grid-template-columns:repeat(4,minmax(0,1fr))}@media (max-width:1024px){.eps.four{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (max-width:620px){.eps.four{grid-template-columns:minmax(0,1fr)}}
+.eps.five{grid-template-columns:repeat(5,minmax(0,1fr))}@media (max-width:1024px){.eps.five{grid-template-columns:repeat(6,minmax(0,1fr))}.eps.five>*{grid-column:span 2}.eps.five>:nth-child(4){grid-column:2/span 2}}@media (max-width:620px){.eps.five{grid-template-columns:minmax(0,1fr)}.eps.five>*,.eps.five>:nth-child(4){grid-column:auto}}
